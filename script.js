@@ -1,10 +1,10 @@
 //Model
 let html = document.getElementById(`app`);
-const car = `<img src="img/longcat.png"/>`;
+const car = `<img src="img/man.png"/>`;
 const enemies = [
-    {name: 'bestemor', img: `>`},
+    {name: 'bestemor', img: "img/granny.png"},
     {name: 'Per', img: "img/bil2.png"}, 
-    {name: 'Per', img: "img/bil2.png"},
+    {name: 'ekorn', img: "img/bil2.png"},
     
 ];
 
@@ -90,7 +90,7 @@ function encounter(){
             let randomPart = randomizer(Object.keys(upgrades).length)
             for (let j = 0; j < arrayIndex[i].length; j++){
                 if (j == randomPart) {
-                    console.log(arrayIndex[i][j])
+                    console.log(upgrades.arrayIndex[i][j])
                 }
             }
         }

@@ -83,19 +83,20 @@ function randomizer(num) {
 }
 
 function encounter() {
-    //velg finde eller upgrade
-    // hvis upgrade
+    console.log(randomCategory()[0])
 
-    //finne kategori
-    let randomCategory = randomizer(Object.keys(upgrades).length)
+}
+
+function randomCategory() {
+    let randomCategoryInternal = randomizer(Object.keys(upgrades).length)
 
     let lateI = 0
     for (const [key, value] of Object.entries(upgrades)) {
         lateI++ 
-        
-        console.log("key er",key, "value er",value[lateI]);
+        if(lateI == 1) {
+            return value
+        }
     }
-
 }
 encounter()
 const test = {

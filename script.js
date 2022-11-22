@@ -5,8 +5,9 @@ const enemies = [
     { name: 'bestemor', img: "img/granny.png" },
     { name: 'Per', img: "img/man_with_gun.png" },
     { name: 'ekorn', img: "img/squirrel.png" },
-
 ];
+//skrive array med random encounter text. 
+//fikse css med plassering av tingene
 
 const bil = {
     spoiler: '',
@@ -83,8 +84,11 @@ function randomizer(num) {
 }
 
 function encounter() {
-    console.log(randomCategory()[0])
-
+    const category = randomCategory()
+    let randomShit = randomizer(category.length)
+    console.log(category)
+    console.log(category[randomShit])
+    console.log(category[randomShit].name)
 }
 
 function randomCategory() {
@@ -92,10 +96,10 @@ function randomCategory() {
 
     let lateI = 0
     for (const [key, value] of Object.entries(upgrades)) {
-        lateI++ 
-        if(lateI == 1) {
+        if(lateI == randomCategoryInternal) {
             return value
         }
+        lateI++ 
     }
 }
 encounter()

@@ -1,11 +1,12 @@
 //Model
-let html = document.getElementById(`app`);
-const car = `<img src="img/bil2.png"/>`;
+const html = document.getElementById(`app`);
+const car = `<img class="car-img" src="img/red_car.png"/>`;
+let encounters;
 
 const enemies = [
-    { name: 'Bestemor', img: "img/granny.png" },
-    { name: 'Trump', img: "img/man_with_gun.png" },
-    { name: 'Ekornet', img: "img/squirrel.png" }
+    { name: 'Bestemor', img: "img/granny2.png" },
+    { name: 'Trump', img: "img/trump.png" },
+    { name: 'Ekornet', img: "img/scrat.png" }
 ];
 const encounterBestemor = [
     'kommer som bøssebærer for Røde Kors, hva gjør du?',
@@ -37,9 +38,9 @@ const encounterEkornet = [
 ];
 
 const buddies = [
-    { name: 'Eskil', img: "img/man.png" },
-    { name: 'Geir', img: "img/man.png" },
-    { name: 'Terje', img: "img/man.png" }
+    { name: 'Eskil', img: "img/eskil2.png" },
+    { name: 'Geir', img: "img/geir2.png" },
+    { name: 'Terje', img: "img/terje2.png" }
 ];
 const buddyLine = [
     'For et vrak du kjører da!', //hvis lavt coolmeter OG/ELLER valg av feil
@@ -66,37 +67,41 @@ let currentEncounter = undefined
 
 //TODO fikse css med plassering av tingene (ONGOING)
 
-const bil = {
-    spoiler: undefined,
-    splitter: undefined,
-    skjort: undefined,
-    defuser: undefined,
-    panser: { name: 'hull for luft', coolness: 30},
-    felger: { name: 'rusten stålfelg', coolness: 1 },
-    eksos: { name: 'Stock', coolness: 0 },
-    motor: { name: 'I4', coolness: 0 },
-};
 //max coolness stats = 12.5 per bildel
 
 //TODO upgrades til array og samle arraysa i ett samle array
 //eksempel const spoiler = [{name: 'Wings of Fury', coolness: 9001}]
 // samleArr[random1][samleArr[random2(random1(samleArr[random1].length))]]
 
-const spoiler = [{ name: 'limp dick', coolness: -30 }, { name: 'wings of fury', coolness: 9001 }, ]
-const splitter = [{ name: 'finer plate', coolness: 35 }, { name: 'test1', coolness: 0 },]
-const skjort = [{ name: 'loooooow ride', coolness: 50 }, { name: 'fartshumpskraper', coolness: 42 },]
-const defuser = [{ name: 'tail tale', coolness: 15 }, { name: 'tail gate', coolness: 66 },]
-const panser = [{ name: 'hull for luft', coolness: 30 }, { name: 'heftig luftinntak', coolness: 666 }, { name: 'halvmeter høy dings som du ser ventiler beveger seg', coolness: 6000 },]
-const felger = [{ name: 'rusten stålfelg', coolness: 1 }, { name: 'hjulkapsler', coolness: 10 }, { name: 'lavprofil', coolness: 1000 }, { name: 'spinners med neon', coolness: 9001 },]
-const eksos = [{ name: 'Stock', coolness: 0 }, { name: 'Flow Master', coolness: 0 }, { name: 'Cherry bomb', coolness: 0 }, { name: 'Custom titan', coolness: 0 },]
-const motor = [{ name: 'I4', coolness: 0 }, { name: 'I3', coolness: 3 }, { name: 'V8', coolness: 5700 }, { name: 'W16', coolness: 9001 }]
+const spoiler = [{ name: 'ingen spoiler', coolness: 0 }, { name: 'limp dick', coolness: 6 }, { name: 'wings of fury', coolness: 13 },]
+const splitter = [{ name: 'ingen splitter', coolness: 0 }, { name: 'finèr plate', coolness: 6 }, { name: 'karbonfiber', coolness: 12 },]
+const skjort = [{ name: 'ingen skjørt', coolness: 0 }, { name: 'loooooow ride', coolness: 6 }, { name: 'maurdreper', coolness: 13 },]
+const defuser = [{ name: 'ingen defuser', coolness: 0 }, { name: 'tail tale', coolness: 6 }, { name: 'tail gate', coolness: 12 },]
+const panser = [{ name: 'vanlig panser', coolness: 0 }, { name: 'ventilert panser', coolness: 4 }, { name: 'scoop', coolness: 8 }, { name: 'scoop med kompressor', coolness: 13 },]
+const felger = [{ name: 'rusten stålfelg', coolness: 0 }, { name: 'hjulkapsler', coolness: 4 }, { name: 'lavprofil', coolness: 8 }, { name: 'spinners med neon', coolness: 12 },]
+const eksos = [{ name: 'Stock', coolness: 0 }, { name: 'Flow Master', coolness: 4 }, { name: 'Cherry bomb', coolness: 8 }, { name: 'Custom titan', coolness: 12 },]
+const motor = [{ name: 'I4', coolness: 0 }, { name: 'I3', coolness: 4 }, { name: 'V8', coolness: 8 }, { name: 'W16', coolness: 13 }]
 
+const SPOILER = 0
+const SPLITTER = 1
+
+const bil = [
+    spoiler[0],
+    splitter[0],
+    skjort[0],
+    defuser[0],
+    panser[0],
+    felger[0],
+    eksos[0],
+    motor[0],
+];
 const upgrades = [spoiler, splitter, skjort, defuser, panser, felger, eksos, motor]
 
 const startMenu = document.getElementById("startMenu");
 let deadGrandmas = 0;
 let coolness = 0;
 let life = 100;
+let getPart1 = undefined;
 //View
 
 view()
@@ -107,31 +112,37 @@ function view() {
         <div class="inner-stats">
         <div class="left">
             <div class="stats">
-                <p>Spoiler: ${bil.spoiler}</p>
-                <p>Splitter: GJØR NOE</p>
-                <p>Skjørt: GJØR NOE</p>
+                ${currentUpgrades()}
             </div>
         </div>
         <div class="right">
-                <table>
-                    <tr>
-                    <td>Coolmeter</td>
-                    <td><progress value="${coolness}" min="0" max="100"></progress></td>
-                    </tr>
-                    <tr>
-                    <td>Life</td>
-                    <td><progress value="${life}" min="0" max="100"></progress></td>
-                    </tr>
-                </table>
         </div>
         </div>
     </div>
-    <div class="carImg">${car}</div>
+    <div class="carImg">
+        ${car}
+        <table class="table">
+            <tr>
+                <td>Coolmeter</td>
+                <td><progress value="${coolness}" min="0" max="100"></progress></td>
+            </tr>
+            <tr>
+                <td>Life</td>
+                <td><progress value="${life}" min="0" max="100"></progress></td>
+            </tr>
+        </table>
+    </div>
+    <div class="encounters">
+        ${selectEncounterType()}
+    </div>
     `;
+    html.innerHTML += encounters;
+
 }
 
+
 function clickStart() {
-    document.getElementById('startMenu').style.display='none';
+    document.getElementById('startMenu').style.display = 'none';
 }
 
 
@@ -143,11 +154,18 @@ function randomizer(num) {
 
 //TODO få en tilfeldig komponent, funksjonen skal returnere objektet som innholder komponenten
 function selectRandomComponent() {
-    let getPart1 = randomizer(upgrades.length);
+    getPart1 = randomizer(upgrades.length);
     let getpart2 = randomizer(upgrades[getPart1].length);
+    if (getpart2 == 0) return selectRandomComponent;
     currentEncounter = upgrades[getPart1][getpart2]; //"output" skal være ett objekt
-    console.log('test upgrades', currentEncounter);
 }
+
+function equipComponent() {
+    if (true) {
+
+    }
+}
+
 
 //TODO velger finede
 function selectRandomEnemy() {
@@ -155,23 +173,89 @@ function selectRandomEnemy() {
     currentEncounter = enemy;
 }
 
+//burde få buddies enda skjeldnere enn dette!
 //TODO velger tilfeldig kompis
 function selectRandomBuddy() {
     currentBuddy = buddies[randomizer(buddies.length)]
+    console.log(currentBuddy)
 }
 
 //TODO møter man på en komponent eller en "finende" eller kompisen
 function selectEncounterType() {
+    encounters = '';
     let percent = randomizer(10) + 1;
     if (percent <= 2) {
         selectRandomComponent()
-    } else if (percent <= 7) {
+        encounters = /*HTML*/`
+            <div>Du fant ${currentEncounter.name} med ${currentEncounter.coolness} coolness</div></br>
+            <div>Du har ${bil[getPart1].name} med ${bil[getPart1].coolness} coolness</div>
+            <div>Vil du bytte?</div>
+            `
+            console.log(bil[getPart1].name, bil[getPart1].coolness)
+    } 
+    else if (percent <= 7) {
         selectRandomBuddy()
+        encounters = /*HTML*/`
+            <button onclick="choiceBuddiesButton()">${choicesBuddies[0]}</button>
+            <button onclick="drivePass()">${choicesBuddies[1]}</button>
+            <p>${currentBuddy.name}</p>
+            <img class="pedestrian" src='${currentBuddy.img}'>
+        `;
     } else {
         selectRandomEnemy()
     }
 }
-//TODO hente currentUpgrades
+//
+function currentUpgrades() {
+    let bilStatus = '';
+    let currentCool = 0;
+    for (i = 0; i < bil.length; i++) {
+        currentCool += bil[i].coolness;
+    };
+    coolness = currentCool
+    bilStatus = '<p> coolness er ' + currentCool + ' av 100 </p>';
+    return bilStatus;
+}
+
+function choiceBuddiesButton() {
+    encounters = /*HTML*/`
+        <tr>
+            <td>
+            <button onclick="rightAnswer(0)">${myLine[0]}</button>
+            <button onclick="rightAnswer(1)">${myLine[1]}</button>
+            <button onclick="rightAnswer(2)">${myLine[2]}</button>
+            </td>
+        </tr>
+        <div>${currentBuddy.name}<img src='${currentBuddy.img}'></div>
+        `;
+    return encounters;
+}
 
 
-//testFunksjon()
+function drivePass() {
+    encounters = '';
+    return selectEncounterType();
+}
+
+function rightAnswer(chosenLine){
+    let randomNumber = randomizer(3);
+    let winnerNumber = 2;
+    if (randomNumber === winnerNumber && coolness > 90) {
+        encounters = /*HTML*/`
+        <tr>
+        <td>${buddyLine[1]}</td>
+        <td>Gratulerer! Du kan ikke bli noe kulere enn dette!</td>
+        </tr>
+        <div>${currentBuddy.name}<img src=${currentBuddy.img}></div>
+        `;
+    }else{
+        encounters = /*HTML*/`
+        <tr>
+        <td>${buddyLine[0]}</td>
+        <button onclick="drivePass()">Kjør videre</button>
+        </tr>
+        <div>${currentBuddy.name}<img src=${currentBuddy.img}></div>
+        `;
+        return encounters;
+      }
+}

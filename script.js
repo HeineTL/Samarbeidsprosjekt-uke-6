@@ -8,6 +8,7 @@ const enemies = [
 ];
 //skrive array med random encounter text. 
 //fikse css med plassering av tingene
+ofogeoj
 
 const bil = {
     spoiler: '',

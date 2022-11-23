@@ -1,12 +1,13 @@
 * {
     margin: 0;
     padding: 0;
+    font-family: arial;
 }
 
 body {
     background-image: url("img/bacground2.png");
-    background-size: contain;
-    height: 100%;
+    background-size: 1500px;
+    background-repeat: no-repeat;
 }
 
 h1 {
@@ -15,12 +16,16 @@ h1 {
 }
 
 .carImg {
-    float: bottom;
+    position: fixed;
+    top: 200px;
+    padding: 0;
+    margin: 0;
 }
 
 td {
     padding: 4px;
     box-shadow: 0px 0px 10px 0px gray;
+    background-color: white;
     
 }
 .start_menu {
@@ -30,6 +35,12 @@ td {
     background-color: black;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
+    z-index: 999;
+}
+.start_menu h1 {
+    color: white;
+    text-align: center;
 }
 .start_menu button {
     display: flex;
@@ -37,7 +48,39 @@ td {
     align-items: center;
     background-color: rgb(25, 108, 25);
     color: white;
-    font-family: arial;
     padding: 10px;
-    border-radius: 20px;
+    border-radius: 90px;
+    padding: 20px;
+}
+.sign {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    text-align: center;
+}
+.inner-stats {
+    flex-direction: row;
+    display: flex;
+}
+.left {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 250px;
+}
+.right {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.stats {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+.stats p {
+    padding: 10px;
+    padding-bottom: 5px;
+    padding-top: 5px;
 }

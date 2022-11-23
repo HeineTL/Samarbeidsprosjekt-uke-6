@@ -6,74 +6,54 @@ const enemies = [
     { name: 'Per', img: "img/man_with_gun.png" },
     { name: 'ekorn', img: "img/squirrel.png" },
 ];
-//skrive array med random encounter text. 
-//fikse css med plassering av tingene
-
+//TODO skrive array med random encounter text. 
+//TODO fikse css med plassering av tingene
+//TODO 
 
 const bil = {
-    spoiler: '',
-    splitter: '',
-    skjørt: '',
-    defuser: '',
-    panser: '',
-    felger: '',
-    eksos: '',
-    motor: '',
+    spoiler: undefined,
+    splitter: undefined,
+    skjort: undefined,
+    defuser: undefined,
+    panser: undefined,
+    felger: undefined,
+    eksos: undefined,
+    motor: undefined,
 };
 
-const upgrades = {
-    spoiler: [
-        { name: 'Wings of Fury', coolness: 9001 },
-        { name: 'limp dick', coolness: -30 }
-    ],
-    splitter: [
-        { name: 'kae', coolness: 35 },
-        { name: 'test1', coolness: 0 },
-    ],
-    skjørt: [
-        { name: 'loooooow ride', coolness: 50 },
-        { name: 'test2', coolness: 0 },
-    ],
-    defuser: [
-        { name: 'tail tale', coolness: 15 },
-        { name: 'teast3', coolness: 0 },
-    ],
-    panser: [
-        { name: 'teast4', coolness: 0 },
-        { name: 'teast5', coolness: 0 },
-    ],
-    felger: [
-        { name: 'teast6', coolness: 0 },
-        { name: 'teast7', coolness: 0 },
+//TODO upgrades til array og samle arraysa i ett samle array
+//eksempel const spiler = [{name: 'Wings of Fury', coolness: 9001}]
+// samleArr[random1][samleArr[random2(random1(samleArr[random1].length))]]
 
-    ],
-    eksos: [
-        { name: 'teast8', coolness: 0 },
-        { name: 'teast9', coolness: 0 },
-        { name: 'teast10', coolness: 0 },
+const spoiler = [{ name: 'Wings of Fury', coolness: 9001 }, { name: 'limp dick', coolness: -30 },]
+const splitter = [{ name: 'kae', coolness: 35 }, { name: 'test1', coolness: 0 },]
+const skjort = [{ name: 'loooooow ride', coolness: 50 }, { name: 'test2', coolness: 0 },]
+const defuser = [{ name: 'tail tale', coolness: 15 }, { name: 'teast3', coolness: 0 },]
+const panser = [{ name: 'teast4', coolness: 0 }, { name: 'teast5', coolness: 0 },]
+const felger = [{ name: 'teast6', coolness: 0 }, { name: 'teast7', coolness: 0 },]
+const eksos = [{ name: 'teast8', coolness: 0 }, { name: 'teast9', coolness: 0 }, { name: 'teast10', coolness: 0 },]
+const motor = [{ name: 'I4', coolness: 0 }, { name: 'I3', coolness: 3 }, { name: 'V8', coolness: 5700 },]
 
-    ],
-    motor: [
-        { name: 'teast11', coolness: 0 },
-        { name: 'teast12', coolness: 0 },
-        { name: 'teast13', coolness: 0 },
+const upgrades = [spoiler, splitter, skjort, defuser, panser, felger, eksos, motor]
 
-    ],
-}
 
-//View
+    //View
 
-view()
+    view()
 function view() {
     html.innerHTML = /*HTML*/`
     <h1>Broom broom spill</h1>
-    <div>${car}</div>
-    <div>Coolmeter
-        <progress value="0" min="0" max="100"></progress>
-    </div>
-    <div>Life
-        <progress value="0" min="0" max="100"></progress>
-    </div>
+    <div class="carImg">${car}</div>
+    <table>
+        <tr>
+            <td>Coolmeter</td>
+            <td><progress value="0" min="0" max="100"></progress></td>
+        </tr>
+        <tr>
+            <td>Life</td>
+            <td><progress value="0" min="0" max="100"></progress></td>
+        </tr>
+    </table>
     `;
 }
 
@@ -84,35 +64,14 @@ function randomizer(num) {
     return getRandom;
 }
 
-function encounter() {
-    const category = randomCategory()
-    let randomShit = randomizer(category.length)
-    console.log(category)
-    console.log(category[randomShit])
-    console.log(category[randomShit].name)
+//TODO få en tilfeldig komponent, funksjonen skal returnere objektet som innholder komponenten
+function getRandomComponent() {
+
+    
+    return //objektet
 }
 
-function randomCategory() {
-    let randomCategoryInternal = randomizer(Object.keys(upgrades).length)
-
-    let lateI = 0
-    for (const [key, value] of Object.entries(upgrades)) {
-        if(lateI == randomCategoryInternal) {
-            return value
-        }
-        lateI++ 
-    }
-}
-encounter()
-const test = {
-    lol: "asdf"
-}
-function testFunksjon() {
-    for (const [key, value] of Object.entries(upgrades)) {
-        console.log(value[0]);
-        test.key = value
-    }
-    console.log("asdf",test)
-}
+//TODO møter man på en komponent eller en "finende"
+functionget
 
 //testFunksjon()

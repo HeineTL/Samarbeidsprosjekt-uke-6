@@ -2,6 +2,7 @@
 const html = document.getElementById(`app`);
 const car = `<img class="car-img" src="img/red_car.png"/>`;
 let encounters;
+let lastEncounter = undefined
 
 const enemies = [
     { name: 'Bestemor', img: "img/granny2.png" },
@@ -17,7 +18,7 @@ const encounterBestemor = [
     'kjefter på deg at du ikke besøker ofte nok, hva gjør du?',
     'synes du er SÅ kul at de skal starte en onlyfans for deg, hva gjør du?',
 ];
-const encounterPer = [
+const encounterTrump = [
     'vil selge bilen din på Finn og ta alle pengene etter salget, hva gjør du?',
     'løper midt i veien for ingen grunn, hva gjør du?',
     'ønsker å gi deg en "gratis" bilvask, hva gjør du?',
@@ -43,14 +44,15 @@ const buddies = [
     { name: 'Terje', img: "img/terje2.png" }
 ];
 const buddyLine = [
-    'For et vrak du kjører da!', //hvis lavt coolmeter OG/ELLER valg av feil
-    'Fet kjærre!' //hvis høyt/fullt coolmeter OG velger riktig 
+    'For et vrak du kjører! Får du gjort noen NK-oppgaver der da?', //når du stiller feil spørsmål
+    'Fet kjærre! Ses på mandag, og god helg!', //hvis høyt/fullt coolmeter OG velger riktig 
+    'Jeg ser at du ikke koder, kanskje du skulle begynne å jobbe litt?',//hvis du velger riktig, men ikke har høy coolness
 ];
 //karakteren sine valg, hvor èn av valgene er riktige, som da trigger hvilne buddyLine som skal spilles. 
 const myLine = [
     'Hva synes du om bilen min?',
     'God dag! Ingen Chorei i dag altså?',
-    'For en tilfeldighet å treffe deg her ute ved veien!'
+    'For en tilfeldighet å treffe deg her ute ved veien!',
 ]
 
 const choicesEnemies = [
@@ -60,7 +62,7 @@ const choicesEnemies = [
 
 const choicesBuddies = [
     'Stopp på trass',
-    'Kjøre forbi'
+    'Kjøre forbi',
 ]
 let currentBuddy = undefined
 let currentEncounter = undefined
@@ -73,17 +75,16 @@ let currentEncounter = undefined
 //eksempel const spoiler = [{name: 'Wings of Fury', coolness: 9001}]
 // samleArr[random1][samleArr[random2(random1(samleArr[random1].length))]]
 
-const spoiler = [{ name: 'ingen spoiler', coolness: 0 }, { name: 'limp dick', coolness: 6 }, { name: 'wings of fury', coolness: 13 },]
-const splitter = [{ name: 'ingen splitter', coolness: 0 }, { name: 'finèr plate', coolness: 6 }, { name: 'karbonfiber', coolness: 12 },]
-const skjort = [{ name: 'ingen skjørt', coolness: 0 }, { name: 'loooooow ride', coolness: 6 }, { name: 'maurdreper', coolness: 13 },]
-const defuser = [{ name: 'ingen defuser', coolness: 0 }, { name: 'tail tale', coolness: 6 }, { name: 'tail gate', coolness: 12 },]
-const panser = [{ name: 'vanlig panser', coolness: 0 }, { name: 'ventilert panser', coolness: 4 }, { name: 'scoop', coolness: 8 }, { name: 'scoop med kompressor', coolness: 13 },]
+const spoiler = [{ name: 'ingen spoiler', coolness: 0 }, { name: 'pappspoiler', coolness: 6 }, { name: 'wings of fury', coolness: 13 },]
+const splitter = [{ name: 'ingen splitter', coolness: 0 }, { name: 'finèrplatespoiler', coolness: 6 }, { name: 'karbonfiberspoiler', coolness: 12 },]
+const skjort = [{ name: 'ingen skjørt', coolness: 0 }, { name: 'skjørtet Loooooow Ride', coolness: 6 }, { name: 'skjørtet Maurdreper', coolness: 13 },]
+const defuser = [{ name: 'ingen defuser', coolness: 0 }, { name: 'Tail Tale-defuser', coolness: 6 }, { name: 'Tail Gate-defuser', coolness: 12 },]
+const panser = [{ name: 'vanlig panser', coolness: 0 }, { name: 'ventilert panser', coolness: 4 }, { name: 'panser med scoop', coolness: 8 }, { name: 'scoop med kompressor', coolness: 13 },]
 const felger = [{ name: 'rusten stålfelg', coolness: 0 }, { name: 'hjulkapsler', coolness: 4 }, { name: 'lavprofil', coolness: 8 }, { name: 'spinners med neon', coolness: 12 },]
-const eksos = [{ name: 'Stock', coolness: 0 }, { name: 'Flow Master', coolness: 4 }, { name: 'Cherry bomb', coolness: 8 }, { name: 'Custom titan', coolness: 12 },]
-const motor = [{ name: 'I4', coolness: 0 }, { name: 'I3', coolness: 4 }, { name: 'V8', coolness: 8 }, { name: 'W16', coolness: 13 }]
+const eksos = [{ name: 'standard eksospotte', coolness: 0 }, { name: 'eksospotta Flow Master', coolness: 4 }, { name: 'eksospotta Cherry bomb', coolness: 8 }, { name: 'eksospotta Custom titan', coolness: 12 },]
+const motor = [{ name: 'I4-motor', coolness: 0 }, { name: 'I3-motor', coolness: 4 }, { name: 'V8-motor', coolness: 8 }, { name: 'W16-motor', coolness: 13 }]
 
-const SPOILER = 0
-const SPLITTER = 1
+
 
 const bil = [
     spoiler[0],
@@ -99,50 +100,67 @@ const upgrades = [spoiler, splitter, skjort, defuser, panser, felger, eksos, mot
 
 const startMenu = document.getElementById("startMenu");
 let deadGrandmas = 0;
+let deadTrump = 0;
+let deadSquirrel = 0;
 let coolness = 0;
 let life = 100;
 let getPart1 = undefined;
+let henteNy = true
+let buddyValg = 'dette funker ish';
+
 //View
 
 view()
 function view() {
+    if(life <= 0) {
+        html.innerHTML = /*HTML*/`
+        <div id="deadMenu" style="display:flex;" class="menu redmenu">
+        <h1>DU ER DØD</h1>
+        <button onclick="location.reload() ">RESTART!</button>
+    </div>
+        `;
+        
+        return;
+    }
     html.innerHTML = /*HTML*/`
     <div class="sign">
-        <h1>Broom broom spill</h1>
+        <h1 class="main-title">Broom broom spill</h1>
         <div class="inner-stats">
-        <div class="left">
             <div class="stats">
                 ${currentUpgrades()}
             </div>
-        </div>
-        <div class="right">
-        </div>
+            <div class="progressbar">
+                <table class="table">
+                    <tr>
+                        <td>Coolmeter</td>
+                        <td><progress value="${coolness}" min="0" max="100"></progress></td>
+                    </tr>
+                    <tr>
+                        <td>Life</td>
+                        <td><progress value="${life}" min="0" max="100"></progress></td>
+                    </tr>
+                </table>
+            </div>
         </div>
     </div>
     <div class="carImg">
         ${car}
-        <table class="table">
-            <tr>
-                <td>Coolmeter</td>
-                <td><progress value="${coolness}" min="0" max="100"></progress></td>
-            </tr>
-            <tr>
-                <td>Life</td>
-                <td><progress value="${life}" min="0" max="100"></progress></td>
-            </tr>
-        </table>
     </div>
     <div class="encounters">
-        ${selectEncounterType()}
+        ${henteNy ? selectEncounterType() : buddyValg}
     </div>
     `;
-    html.innerHTML += encounters;
 
 }
 
 
 function clickStart() {
     document.getElementById('startMenu').style.display = 'none';
+ 
+
+    var audio = new Audio('lyd/sang.mp3');
+    audio.volume = 0.02;
+    audio.play();
 }
 
 
@@ -156,7 +174,7 @@ function randomizer(num) {
 function selectRandomComponent() {
     getPart1 = randomizer(upgrades.length);
     let getpart2 = randomizer(upgrades[getPart1].length);
-    if (getpart2 == 0) return selectRandomComponent;
+    if (getpart2 == 0) return selectRandomComponent();
     currentEncounter = upgrades[getPart1][getpart2]; //"output" skal være ett objekt
 }
 
@@ -182,27 +200,46 @@ function selectRandomBuddy() {
 
 //TODO møter man på en komponent eller en "finende" eller kompisen
 function selectEncounterType() {
+    console.log("selectEncounterType kjører!")
     encounters = '';
     let percent = randomizer(10) + 1;
-    if (percent <= 2) {
+    
+    if (lastEncounter === percent) return selectEncounterType()
+    lastEncounter = percent
+    
+    if (percent <= 5) {
         selectRandomComponent()
+        console.log(getPart1)
         encounters = /*HTML*/`
+        <div class="add-text-bg">
             <div>Du fant ${currentEncounter.name} med ${currentEncounter.coolness} coolness</div></br>
+            
             <div>Du har ${bil[getPart1].name} med ${bil[getPart1].coolness} coolness</div>
             <div>Vil du bytte?</div>
+            <button onclick="addFound()">Montér denne delen!</button> <button onclick="view()">Nei, den var bare piss...</button>
+        </div>
             `
             console.log(bil[getPart1].name, bil[getPart1].coolness)
+            return encounters
     } 
     else if (percent <= 7) {
         selectRandomBuddy()
         encounters = /*HTML*/`
-            <button onclick="choiceBuddiesButton()">${choicesBuddies[0]}</button>
-            <button onclick="drivePass()">${choicesBuddies[1]}</button>
-            <p>${currentBuddy.name}</p>
-            <img class="pedestrian" src='${currentBuddy.img}'>
+        <p>${currentBuddy.name}</p>
+        <img class="pedestrian" src='${currentBuddy.img}'>
+        <button onclick="choiceBuddiesButton()">${choicesBuddies[0]}</button>
+        <button onclick="drivePass()">${choicesBuddies[1]}</button>
         `;
+        return encounters
     } else {
         selectRandomEnemy()
+        encounters = /*HTML*/`
+        <p class="add-text-bg">${currentEncounter.name} ${selectedEnemyVoiceline(currentEncounter.name)}</p>
+        <img class="pedestrian" src='${currentEncounter.img}'>
+        <button onclick="vehicularManslaughter('${currentEncounter.name}')">${choicesEnemies[0]}</button>
+        <button onclick="drivePass()">${choicesEnemies[1]}</button>
+        `;
+        return encounters
     }
 }
 //
@@ -211,14 +248,17 @@ function currentUpgrades() {
     let currentCool = 0;
     for (i = 0; i < bil.length; i++) {
         currentCool += bil[i].coolness;
+        bilStatus += '<p>' + bil[i].name + ' med coolness: ' + bil[i].coolness +'</p>'
     };
     coolness = currentCool
-    bilStatus = '<p> coolness er ' + currentCool + ' av 100 </p>';
+    //bilStatus += '<p> coolness er ' + currentCool + ' av 100 </p>';
     return bilStatus;
 }
 
 function choiceBuddiesButton() {
-    encounters = /*HTML*/`
+    console.log('choiceBuddiesButton kjører!')
+    henteNy = false
+    buddyValg = /*HTML*/`
         <tr>
             <td>
             <button onclick="rightAnswer(0)">${myLine[0]}</button>
@@ -226,36 +266,94 @@ function choiceBuddiesButton() {
             <button onclick="rightAnswer(2)">${myLine[2]}</button>
             </td>
         </tr>
-        <div>${currentBuddy.name}<img src='${currentBuddy.img}'></div>
+        <img class="pedestrian" src='${currentBuddy.img}'>
         `;
-    return encounters;
+    view();
+    //return encounters;
 }
 
 
 function drivePass() {
-    encounters = '';
-    return selectEncounterType();
+    console.log('Du har kjørt forbi!')
+    henteNy = true;
+    view();
 }
 
 function rightAnswer(chosenLine){
-    let randomNumber = randomizer(3);
-    let winnerNumber = 2;
-    if (randomNumber === winnerNumber && coolness > 90) {
-        encounters = /*HTML*/`
+    let randomNumber = chosenLine;
+    let winnerNumber = randomizer(3); 
+    if(randomNumber === winnerNumber && coolness < 85){
+        buddyValg = /*HTML*/`
         <tr>
-        <td>${buddyLine[1]}</td>
-        <td>Gratulerer! Du kan ikke bli noe kulere enn dette!</td>
-        </tr>
-        <div>${currentBuddy.name}<img src=${currentBuddy.img}></div>
-        `;
-    }else{
-        encounters = /*HTML*/`
-        <tr>
-        <td>${buddyLine[0]}</td>
+        <td><div class="add-text-bg">${buddyLine[2]}</div></td>
         <button onclick="drivePass()">Kjør videre</button>
         </tr>
-        <div>${currentBuddy.name}<img src=${currentBuddy.img}></div>
+        <img class="pedestrian" src=${currentBuddy.img}>
         `;
-        return encounters;
+    }
+    else if (randomNumber === winnerNumber && coolness > 85) {
+        buddyValg = /*HTML*/`
+        <tr class="winner">
+        <td>Gratulerer! Du kan ikke bli noe kulere enn dette!</td>
+        <td>Døde bestemødre:${deadGrandmas}</td>
+        <td>Døde ekkorn:${deadSquirrel}</td>
+        <td>Døde trumper:${deadTrump}</td></div>
+        </tr>
+        <tr>
+        <td><div class="add-text-bg">${buddyLine[1]}</td>
+        </tr>
+        <img class="pedestrian" src=${currentBuddy.img}>
+        `;
+    }else{
+        buddyValg = /*HTML*/`
+        <tr>
+        <td><div class="add-text-bg">${buddyLine[0]}</div></td>
+        <button onclick="drivePass()">Kjør videre</button>
+        </tr>
+        <img class="pedestrian" src=${currentBuddy.img}>
+        `;
       }
+      view();
+}
+function addFound(){
+    bil[getPart1] = currentEncounter;
+    view();
+}
+
+function vehicularManslaughter(detectedEnemy){
+    if(detectedEnemy == 'Bestemor') {
+        deadGrandmas++; 
+        life -= 10;
+    }else if (detectedEnemy == 'Trump'){
+        deadTrump++;
+        life -= 7;
+    }else{
+        deadSquirrel++;
+        life -= 2;
+    }
+    console.log('Du har kjørt på:', deadGrandmas, 'bestemødre');
+    console.log('Du har kjørt på:', deadTrump, 'Trumps');
+    console.log('Du har kjørt på:', deadSquirrel, 'ekorn');
+    view();
+}
+
+function selectedEnemyVoiceline(detectedEnemy){
+    let enemyVoice = '';
+    if(detectedEnemy == 'Bestemor'){
+        enemyVoice = encounterBestemor[randomizer(encounterBestemor.length)];
+        
+    }else if(detectedEnemy == 'Trump'){
+        enemyVoice = encounterTrump[randomizer(encounterTrump.length)];
+    }
+    else{
+        enemyVoice = encounterEkornet[randomizer(encounterEkornet.length)];
+    }
+    return enemyVoice;
+}
+
+const fjuskDel = () => {
+    for (let i = 0; i < bil.length; i++) {
+        bil[i] = {name: "FJUSK!", coolness: 13}
+    }
+    view()
 }

@@ -12,9 +12,8 @@ body {
 
 h1 {
     font-family: fantasy;
-    font-size: 50px;
+    font-size: 30px;
 }
-
 .carImg {
     position: fixed;
     top: 225px;
@@ -33,7 +32,7 @@ td {
     background-color: white;
     
 }
-.start_menu {
+.menu {
     position: fixed;
     width: 100%;
     height: 100vh;
@@ -43,11 +42,14 @@ td {
     flex-direction: column;
     z-index: 999;
 }
-.start_menu h1 {
+.menu h1 {
     color: white;
     text-align: center;
 }
-.start_menu button {
+.redmenu {
+    background-color: red;
+}
+.menu button {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -65,7 +67,7 @@ td {
     text-align: center;
 }
 .inner-stats {
-    flex-direction: row;
+    flex-direction: column;
     display: flex;
 }
 .left {
@@ -80,16 +82,18 @@ td {
     display: flex;
     flex-wrap: wrap;
     font-size: 13px;
+    justify-content: center;
 }
 .stats p {
     padding: 10px;
     padding-bottom: 5px;
     padding-top: 5px;
+    display: flex;
 }
 .table {
-    position: relative;
-    left: 250px;
-    bottom: 0;
+    display: flex;
+    justify-content: center;
+    font-size: 13px;
 }
 .pedestrian {
     width: 120px;
@@ -104,15 +108,27 @@ td {
     text-align: center;
     left: 1000px;
     top: 100px;
+    width: 200px;
+    padding: 10px;
 }
 .encounters button{
     padding: 10px;
     font-size: 20px;
 }
 .encounters p {
-    -webkit-text-stroke: 2px white;
+    -webkit-text-stroke: 0.5px white;
     color: black;
     font-weight: bolder;
     font-family: impact;
     font-size: 40px;
+}
+.add-text-bg {
+    background-color: rgb(52, 52, 52);
+    color: white;
+    padding: 5px;
+    -webkit-text-stroke: 0 !important;
+    color: white !important;
+    font-size: 20px !important;
+    font-weight: normal !important;
+    font-family: arial !important;
 }
